@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WhatsApp Support Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0b141a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    color: #e9edef;
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(37, 211, 102, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(37, 211, 102, 0.06) 0%, transparent 50%);
+  }
+
+  .container {
+    width: 100%;
+    max-width: 420px;
+    background: #111b21;
+    border-radius: 28px;
+    padding: 28px 22px 24px;
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+    animation: fadeUp 0.45s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-8px); }
+    80% { transform: translateX(8px); }
+  }
+
+  /* ---------- HEADER ---------- */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .wa-icon {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(145deg, #25d366, #128c7e);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.35);
+  }
+
+  .wa-icon svg {
+    width: 26px;
+    height: 26px;
+    fill: #fff;
+  }
+
+  .header-text h1 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .header-text p {
+    font-size: 12.5px;
+    color: #8696a0;
+    margin-top: 2px;
+  }
+
+  /* ---------- TOMBOL TUTORIAL VIDEO ---------- */
+  .tutor-btn {
+    width: 100%;
+    padding: 15px 18px;
+    background: linear-gradient(145deg, #1f2c34, #182229);
+    border: 1.5px solid #2a3942;
+    border-radius: 16px;
+    color: #e9edef;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    transition: all 0.25s ease;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+
+  .tutor-btn:hover {
+    border-color: #25d36655;
+    background: linear-gradient(145deg, #223038, #1a2830);
+  }
+
+  .tutor-btn:active {
+    transform: scale(0.98);
+  }
+
+  .tutor-btn .play-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #25d366, #128c7e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    transition: all 0.25s ease;
+  }
+
+  .tutor-btn .play-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+    margin-left: 2px;
+  }
+
+  .tutor-btn .tutor-label {
+    flex: 1;
+  }
+
+  .tutor-btn .tutor-label .title {
+    font-size: 14px;
+    font-weight: 700;
+    display: block;
+    letter-spacing: -0.2px;
+  }
+
+  .tutor-btn .tutor-label .sub {
+    font-size: 11.5px;
+    color: #8696a0;
+    font-weight: 500;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .tutor-btn .badge-play {
+    background: linear-gradient(145deg, #25d366, #128c7e);
+    color: #0b141a;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  /* Video expand container */
+  .tutor-video-wrap {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.35s ease, margin-bottom 0.35s ease;
+    margin-bottom: 0;
+  }
+
+  .tutor-video-wrap.open {
+    max-height: 1500px;
+    opacity: 1;
+    margin-bottom: 12px;
+  }
+
+  .tutor-video-inner {
+    background: #1f2c34;
+    border: 1.5px solid #2a3942;
+    border-radius: 16px;
+    padding: 12px;
+    position: relative;
+  }
+
+  .tutor-video-inner video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    background: #000;
+  }
+
+  .close-video {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 2;
+  }
+
+  .close-video:hover {
+    background: rgba(255, 82, 82, 0.85);
+  }
+
+  .close-video svg {
+    width: 14px;
+    height: 14px;
+    fill: #fff;
+  }
+
+  /* ============================================================= */
+  /* NOTE - ANIMASI LIPAT                                          */
+  /* ============================================================= */
+  .note-box {
+    background: linear-gradient(145deg, #2a1f1a, #1f1815);
+    border: 1.5px solid #4a3a2a;
+    border-left: 4px solid #ff9800;
+    border-radius: 14px;
+    margin-bottom: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .note-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255,152,0,0.15), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .note-box.open {
+    border-color: #ff9800;
+    box-shadow: 0 8px 24px rgba(255, 152, 0, 0.15);
+  }
+
+  /* Header note - selalu terlihat */
+  .note-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    user-select: none;
+    transition: all 0.25s ease;
+  }
+
+  .note-header:hover {
+    background: rgba(255, 152, 0, 0.05);
+  }
+
+  .note-header:active {
+    background: rgba(255, 152, 0, 0.1);
+  }
+
+  .note-header svg.ic-warn {
+    width: 18px;
+    height: 18px;
+    fill: #ff9800;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .note-box.open .note-header svg.ic-warn {
+    transform: scale(1.15);
+  }
+
+  .note-header span.note-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #ff9800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex: 1;
+  }
+
+  .note-header .chevron {
+    width: 18px;
+    height: 18px;
+    fill: #ff9800;
+    flex-shrink: 0;
+    transition: transform 0.35s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+
+  .note-box.open .note-header .chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Isi note yang dilipat */
+  .note-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.45s ease, opacity 0.3s ease, padding 0.3s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .note-box.open .note-content {
+    max-height: 400px;
+    opacity: 1;
+  }
+
+  .note-text {
+    font-size: 12.5px;
+    color: #d1c4b8;
+    line-height: 1.65;
+    font-weight: 500;
+    padding: 0 16px 14px 16px;
+    border-top: 1px dashed rgba(255, 152, 0, 0.25);
+    padding-top: 12px;
+    margin-top: 2px;
+  }
+
+  /* ---------- TOMBOL MAU PIN ---------- */
+  .buy-pin-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(145deg, #229ED9, #1a7fb0);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    box-shadow: 0 8px 24px rgba(34, 158, 217, 0.35);
+    text-decoration: none;
+    margin-top: 22px;
+  }
+
+  .buy-pin-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 12px rgba(34, 158, 217, 0.3);
+  }
+
+  .buy-pin-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  .buy-pin-btn .pulse {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4dff91;
+    box-shadow: 0 0 10px #4dff91;
+    animation: pulseDot 1.5s ease infinite;
+    margin-left: 4px;
+  }
+
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ============================================================= */
+  /* PIN LOCK SCREEN                                               */
+  /* ============================================================= */
+  #lockScreen {
+    position: fixed;
+    inset: 0;
+    background: #0b141a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+    overflow-y: auto;
+    background-image: 
+      radial-gradient(circle at 50% 30%, rgba(37, 211, 102, 0.12) 0%, transparent 55%),
+      radial-gradient(circle at 50% 90%, rgba(37, 211, 102, 0.08) 0%, transparent 50%);
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+  }
+
+  #lockScreen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .lock-box {
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    animation: fadeUp 0.5s ease;
+    margin: auto;
+    padding: 20px 0;
+  }
+
+  .lock-box.shake {
+    animation: shake 0.45s ease;
+  }
+
+  .lock-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    background: linear-gradient(145deg, #25d366, #128c7e);
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+  }
+
+  .lock-icon svg {
+    width: 34px;
+    height: 34px;
+    fill: #fff;
+  }
+
+  .lock-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: -0.4px;
+  }
+
+  .lock-sub {
+    font-size: 13px;
+    color: #8696a0;
+    margin-bottom: 24px;
+  }
+
+  .pin-dots {
+    display: flex;
+    justify-content: center;
+    gap: 11px;
+    margin-bottom: 26px;
+    min-height: 20px;
+  }
+
+  .pin-dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 2px solid #2a3942;
+    background: transparent;
+    transition: all 0.2s ease;
+  }
+
+  .pin-dot.filled {
+    background: #25d366;
+    border-color: #25d366;
+    box-shadow: 0 0 12px rgba(37, 211, 102, 0.6);
+    transform: scale(1.15);
+  }
+
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .key {
+    background: #1f2c34;
+    border: 1.5px solid #2a3942;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 22px;
+    font-weight: 600;
+    color: #e9edef;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+  }
+
+  .key:hover {
+    background: #223038;
+    border-color: #25d36655;
+  }
+
+  .key:active {
+    transform: scale(0.92);
+    background: #25d36622;
+    border-color: #25d366;
+  }
+
+  .key.empty {
+    background: transparent;
+    border: none;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .key.backspace svg {
+    width: 24px;
+    height: 24px;
+    fill: #8696a0;
+  }
+
+  .key.backspace:active svg {
+    fill: #25d366;
+  }
+
+  .lock-error {
+    color: #ff5252;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 18px;
+    height: 18px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .lock-error.show {
+    opacity: 1;
+  }
+
+  /* ---------- MENU UTAMA ---------- */
+  .menu-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8696a0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+
+  .menu-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #1f2c34;
+    border: 1.5px solid #2a3942;
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .menu-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(37,211,102,0.12), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .menu-card:hover::before,
+  .menu-card:active::before {
+    opacity: 1;
+  }
+
+  .menu-card:active {
+    transform: scale(0.98);
+    border-color: #25d366;
+  }
+
+  .menu-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .menu-icon.green {
+    background: linear-gradient(145deg, #25d366, #128c7e);
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
+  }
+
+  .menu-icon.blue {
+    background: linear-gradient(145deg, #34b7f1, #1c7fb8);
+    box-shadow: 0 6px 16px rgba(52, 183, 241, 0.3);
+  }
+
+  .menu-icon.orange {
+    background: linear-gradient(145deg, #ff9800, #e65100);
+    box-shadow: 0 6px 16px rgba(255, 152, 0, 0.3);
+  }
+
+  .menu-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+  }
+
+  .menu-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .menu-content h3 {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #e9edef;
+    margin-bottom: 3px;
+  }
+
+  .menu-content p {
+    font-size: 11.5px;
+    color: #8696a0;
+    line-height: 1.4;
+  }
+
+  .menu-arrow {
+    width: 20px;
+    height: 20px;
+    fill: #667781;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.25s ease;
+  }
+
+  .menu-card:hover .menu-arrow {
+    transform: translateX(3px);
+    fill: #25d366;
+  }
+
+  /* ---------- HALAMAN KONTEN ---------- */
+  .page {
+    display: none;
+    animation: fadeUp 0.35s ease;
+  }
+
+  .page.active {
+    display: block;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #1f2c34;
+    border: 1.5px solid #2a3942;
+    border-radius: 12px;
+    padding: 9px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: #8696a0;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.25s ease;
+  }
+
+  .back-btn:hover,
+  .back-btn:active {
+    color: #25d366;
+    border-color: #25d366;
+    transform: translateX(-3px);
+  }
+
+  .back-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .page-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+
+  .page-subtitle {
+    font-size: 12.5px;
+    color: #8696a0;
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+
+  /* ---------- FORM ---------- */
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #8696a0;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-wrap .prefix {
+    position: absolute;
+    left: 15px;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #25d366;
+    pointer-events: none;
+  }
+
+  .input-wrap input {
+    width: 100%;
+    background: #1f2c34;
+    border: 1.5px solid #2a3942;
+    border-radius: 14px;
+    padding: 14px 16px 14px 42px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #e9edef;
+    outline: none;
+    transition: all 0.25s ease;
+  }
+
+  .input-wrap input.no-prefix {
+    padding-left: 16px;
+  }
+
+  .input-wrap input:focus {
+    border-color: #25d366;
+    background: #223038;
+    box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.12);
+  }
+
+  .input-wrap input::placeholder {
+    color: #667781;
+    font-weight: 400;
+  }
+
+  /* ---------- TOMBOL MET ---------- */
+  .met-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .met-btn {
+    position: relative;
+    background: #1f2c34;
+    border: 1.5px solid #2a3942;
+    border-radius: 14px;
+    padding: 15px 10px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #8696a0;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    overflow: hidden;
+  }
+
+  .met-btn:active {
+    transform: scale(0.97);
+  }
+
+  .met-btn.active {
+    background: linear-gradient(145deg, #1f3a2e, #128c7e22);
+    border-color: #25d366;
+    color: #25d366;
+    box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+  }
+
+  .met-btn .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #667781;
+    margin-right: 7px;
+    vertical-align: middle;
+    transition: all 0.25s ease;
+  }
+
+  .met-btn.active .dot {
+    background: #25d366;
+    box-shadow: 0 0 8px #25d366;
+  }
+
+  /* ============================================================= */
+  /* TOMBOL TOGGLE TEKS                                            */
+  /* ============================================================= */
+  .toggle-text-btn {
+    width: 100%;
+    padding: 15px 18px;
+    background: linear-gradient(145deg, #1f2c34, #182229);
+    border: 1.5px solid #2a3942;
+    border-radius: 16px;
+    color: #e9edef;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    transition: all 0.25s ease;
+    text-align: left;
+    margin-bottom: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .toggle-text-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(37,211,102,0.1), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .toggle-text-btn:hover::before {
+    opacity: 1;
+  }
+
+  .toggle-text-btn:hover {
+    border-color: #25d36655;
+    background: linear-gradient(145deg, #223038, #1a2830);
+  }
+
+  .toggle-text-btn:active {
+    transform: scale(0.98);
+  }
+
+  .toggle-text-btn.open {
+    border-color: #25d366;
+    background: linear-gradient(145deg, #1a2d24, #142820);
+    margin-bottom: 12px;
+  }
+
+  .toggle-text-btn .icon-wrap {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #25d366, #128c7e);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  .toggle-text-btn.open .icon-wrap {
+    transform: rotate(180deg);
+    background: linear-gradient(145deg, #128c7e, #0e6b60);
+  }
+
+  .toggle-text-btn .icon-wrap svg {
+    width: 17px;
+    height: 17px;
+    fill: #fff;
+  }
+
+  .toggle-text-btn .label-wrap {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .toggle-text-btn .label-wrap .title {
+    font-size: 14px;
+    font-weight: 700;
+    display: block;
+    letter-spacing: -0.2px;
+  }
+
+  .toggle-text-btn .label-wrap .sub {
+    font-size: 11.5px;
+    color: #8696a0;
+    font-weight: 500;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .toggle-text-btn .badge-toggle {
+    background: linear-gradient(145deg, #25d366, #128c7e);
+    color: #0b141a;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    transition: all 0.25s ease;
+  }
+
+  .toggle-text-btn.open .badge-toggle {
+    background: linear-gradient(145deg, #ff5252, #c62828);
+    color: #fff;
+  }
+
+  .text-expand-wrap {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.35s ease;
+  }
+
+  .text-expand-wrap.open {
+    max-height: 1200px;
+    opacity: 1;
+  }
+
+  .text-expand-inner {
+    padding-top: 4px;
+  }
+
+  /* ---------- TEXTAREA ---------- */
+  .result-box {
+    position: relative;
+    margin-bottom: 14px;
+  }
+
+  .result-box textarea {
+    width: 100%;
+    min-height: 240px;
+    background: #1f2c34;
+    border: 1.5px solid #2a3942;
+    border-radius: 16px;
+    padding: 16px;
+    font-family: inherit;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: #d1d7db;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.25s ease;
+  }
+
+  .result-box textarea:focus {
+    border-color: #25d366;
+  }
+
+  .char-count {
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    font-size: 11px;
+    color: #667781;
+    background: #1f2c34;
+    padding: 2px 8px;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+
+  /* ---------- TOMBOL SALIN ---------- */
+  .copy-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0b141a;
+    background: linear-gradient(145deg, #25d366, #1da851);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.3);
+  }
+
+  .copy-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+  }
+
+  .copy-btn.copied {
+    background: linear-gradient(145deg, #128c7e, #0e6b60);
+    color: #fff;
+  }
+
+  .copy-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  /* ---------- TOAST ---------- */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #25d366;
+    color: #0b141a;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 13.5px;
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    pointer-events: none;
+    z-index: 10000;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  textarea::-webkit-scrollbar { width: 6px; }
+  textarea::-webkit-scrollbar-track { background: transparent; }
+  textarea::-webkit-scrollbar-thumb { background: #2a3942; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================= -->
+<!-- LOCK SCREEN - PIN 990099                                      -->
+<!-- ============================================================= -->
+<div id="lockScreen">
+  <div class="lock-box" id="lockBox">
+    <div class="lock-icon">
+      <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+    </div>
+    <div class="lock-title">Masukkan PIN</div>
+    <div class="lock-sub">Kunci akses diperlukan untuk masuk</div>
+
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+      <div class="pin-dot"></div>
+    </div>
+
+    <div class="keypad">
+      <button class="key" onclick="pressKey('1')">1</button>
+      <button class="key" onclick="pressKey('2')">2</button>
+      <button class="key" onclick="pressKey('3')">3</button>
+      <button class="key" onclick="pressKey('4')">4</button>
+      <button class="key" onclick="pressKey('5')">5</button>
+      <button class="key" onclick="pressKey('6')">6</button>
+      <button class="key" onclick="pressKey('7')">7</button>
+      <button class="key" onclick="pressKey('8')">8</button>
+      <button class="key" onclick="pressKey('9')">9</button>
+      <button class="key empty"></button>
+      <button class="key" onclick="pressKey('0')">0</button>
+      <button class="key backspace" onclick="hapusPin()">
+        <svg viewBox="0 0 24 24"><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-3 12.59L17.59 17 14 13.41 10.41 17 9 15.59 12.59 12 9 8.41 10.41 7 14 10.59 17.59 7 19 8.41 15.41 12 19 15.59z"/></svg>
+      </button>
+    </div>
+
+    <div class="lock-error" id="lockError">PIN salah, coba lagi</div>
+
+    <a href="https://t.me/rembow29" target="_blank" rel="noopener" class="buy-pin-btn">
+      <svg viewBox="0 0 24 24"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+      Mau PIN? Buy Sekarang
+      <span class="pulse"></span>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================================= -->
+<!-- KONTEN UTAMA                                                  -->
+<!-- ============================================================= -->
+<div class="container" id="mainApp" style="display:none;">
+
+  <!-- HALAMAN 1: MENU UTAMA -->
+  <div class="page active" id="page-menu">
+    <div class="header">
+      <div class="wa-icon">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </div>
+      <div class="header-text">
+        <h1>WhatsApp Support</h1>
+        <p>Generator pesan bantuan verifikasi</p>
+      </div>
+    </div>
+
+    <!-- TOMBOL TUTORIAL VIDEO -->
+    <button class="tutor-btn" onclick="toggleVideo()">
+      <div class="play-icon">
+        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <div class="tutor-label">
+        <span class="title">Tutorial Penggunaan</span>
+        <span class="sub">Klik untuk lihat video</span>
+      </div>
+      <span class="badge-play" id="videoBadge">PLAY</span>
+    </button>
+
+    <!-- VIDEO WRAP -->
+    <div class="tutor-video-wrap" id="videoWrap">
+      <div class="tutor-video-inner">
+        <button class="close-video" onclick="toggleVideo()">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+        <video id="videoPlayer" controls playsinline preload="metadata">
+          <source src="x.mp4" type="video/mp4">
+          Browser kamu tidak support video.
+        </video>
+      </div>
+    </div>
+
+    <!-- NOTE - ANIMASI LIPAT -->
+    <div class="note-box" id="noteBox">
+      <div class="note-header" onclick="toggleNote()">
+        <svg class="ic-warn" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        <span class="note-label">Note Penting</span>
+        <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+      </div>
+      <div class="note-content">
+        <div class="note-text">
+          Banding pake metode 1 terus diemin 6menit ga jebol? Banding pake metode 2 diemin 6 menit ga jebol? Tunggu sampe 10 menit tetep ga jebol? Nomor batu
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-title">Pilih Metode</div>
+
+    <!-- 1. RESET PIN (paling atas) -->
+    <div class="menu-card" onclick="bukaHalaman('page-pw')">
+      <div class="menu-icon blue">
+        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/></svg>
+      </div>
+      <div class="menu-content">
+        <h3>Reset PIN</h3>
+        <p>Bantuan reset two step verification PIN</p>
+      </div>
+      <svg class="menu-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+    </div>
+
+    <!-- 2. RESET SMS JAM -->
+    <div class="menu-card" onclick="bukaHalaman('page-sms')">
+      <div class="menu-icon green">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+      </div>
+      <div class="menu-content">
+        <h3>Metode Reset SMS Jam</h3>
+        <p>Bantuan reset waktu tunggu SMS verifikasi</p>
+      </div>
+      <svg class="menu-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+    </div>
+
+    <!-- 3. RESET BANYAK MENCOBA -->
+    <div class="menu-card" onclick="bukaHalaman('page-banyak')">
+      <div class="menu-icon orange">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+      </div>
+      <div class="menu-content">
+        <h3>Metode Reset Banyak Mencoba</h3>
+        <p>Bantuan error "terlalu banyak memasukkan kode"</p>
+      </div>
+      <svg class="menu-arrow" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- HALAMAN 2: RESET SMS JAM                                      -->
+  <!-- ============================================================= -->
+  <div class="page" id="page-sms">
+    <button class="back-btn" onclick="bukaHalaman('page-menu')">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      Kembali
+    </button>
+
+    <div class="page-title">Metode Reset SMS Jam</div>
+    <div class="page-subtitle">Isi nomor & limit jam, lalu pilih metode pesan.</div>
+
+    <div class="field">
+      <label>Nomor WhatsApp</label>
+      <div class="input-wrap">
+        <span class="prefix">+</span>
+        <input type="tel" id="nomorSms" placeholder="Masukkan nomor" inputmode="numeric">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Limit Jam</label>
+      <div class="input-wrap">
+        <input type="number" id="jamSms" class="no-prefix" placeholder="Masukkan jam" min="1" inputmode="numeric">
+      </div>
+    </div>
+
+    <div class="met-buttons">
+      <button class="met-btn active" data-met="1" onclick="pilihMetSms(1)">
+        <span class="dot"></span>MET 1
+      </button>
+      <button class="met-btn" data-met="2" onclick="pilihMetSms(2)">
+        <span class="dot"></span>MET 2
+      </button>
+    </div>
+
+    <button class="toggle-text-btn" id="toggleSms" onclick="toggleTeks('toggleSms','wrapSms')">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+      </div>
+      <div class="label-wrap">
+        <span class="title">Lihat Teks Pesan</span>
+        <span class="sub">Klik untuk buka / tutup</span>
+      </div>
+      <span class="badge-toggle">BUKA</span>
+    </button>
+
+    <div class="text-expand-wrap" id="wrapSms">
+      <div class="text-expand-inner">
+        <div class="result-box">
+          <textarea id="hasilSms" readonly></textarea>
+          <span class="char-count" id="charCountSms">0 karakter</span>
+        </div>
+        <button class="copy-btn" id="copyBtnSms" onclick="salinTeks('hasilSms','copyBtnSms','copyTextSms')">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          <span id="copyTextSms">Salin Teks</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- HALAMAN 3: RESET PIN                                          -->
+  <!-- ============================================================= -->
+  <div class="page" id="page-pw">
+    <button class="back-btn" onclick="bukaHalaman('page-menu')">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      Kembali
+    </button>
+
+    <div class="page-title">Reset PIN</div>
+    <div class="page-subtitle">Masukkan nomor, lalu pilih metode pesan.</div>
+
+    <div class="field">
+      <label>Nomor WhatsApp</label>
+      <div class="input-wrap">
+        <span class="prefix">+</span>
+        <input type="tel" id="nomorPw" placeholder="Masukkan nomor" inputmode="numeric">
+      </div>
+    </div>
+
+    <div class="met-buttons">
+      <button class="met-btn active" data-met="1" onclick="pilihMetPw(1)">
+        <span class="dot"></span>MET 1
+      </button>
+      <button class="met-btn" data-met="2" onclick="pilihMetPw(2)">
+        <span class="dot"></span>MET 2
+      </button>
+    </div>
+
+    <button class="toggle-text-btn" id="togglePw" onclick="toggleTeks('togglePw','wrapPw')">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+      </div>
+      <div class="label-wrap">
+        <span class="title">Lihat Teks Pesan</span>
+        <span class="sub">Klik untuk buka / tutup</span>
+      </div>
+      <span class="badge-toggle">BUKA</span>
+    </button>
+
+    <div class="text-expand-wrap" id="wrapPw">
+      <div class="text-expand-inner">
+        <div class="result-box">
+          <textarea id="hasilPw" readonly></textarea>
+          <span class="char-count" id="charCountPw">0 karakter</span>
+        </div>
+        <button class="copy-btn" id="copyBtnPw" onclick="salinTeks('hasilPw','copyBtnPw','copyTextPw')">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          <span id="copyTextPw">Salin Teks</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- HALAMAN 4: RESET BANYAK MENCOBA                               -->
+  <!-- ============================================================= -->
+  <div class="page" id="page-banyak">
+    <button class="back-btn" onclick="bukaHalaman('page-menu')">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      Kembali
+    </button>
+
+    <div class="page-title">Metode Reset Banyak Mencoba</div>
+    <div class="page-subtitle">Masukkan nomor untuk generate pesan bantuan.</div>
+
+    <div class="field">
+      <label>Nomor WhatsApp</label>
+      <div class="input-wrap">
+        <span class="prefix">+</span>
+        <input type="tel" id="nomorBanyak" placeholder="Masukkan nomor" inputmode="numeric">
+      </div>
+    </div>
+
+    <button class="toggle-text-btn" id="toggleBanyak" onclick="toggleTeks('toggleBanyak','wrapBanyak')">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+      </div>
+      <div class="label-wrap">
+        <span class="title">Lihat Teks Pesan</span>
+        <span class="sub">Klik untuk buka / tutup</span>
+      </div>
+      <span class="badge-toggle">BUKA</span>
+    </button>
+
+    <div class="text-expand-wrap" id="wrapBanyak">
+      <div class="text-expand-inner">
+        <div class="result-box">
+          <textarea id="hasilBanyak" readonly></textarea>
+          <span class="char-count" id="charCountBanyak">0 karakter</span>
+        </div>
+        <button class="copy-btn" id="copyBtnBanyak" onclick="salinTeks('hasilBanyak','copyBtnBanyak','copyTextBanyak')">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          <span id="copyTextBanyak">Salin Teks</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">✓ Teks berhasil disalin!</div>
+
+<script>
+  /* ============================================================= */
+  /* TOGGLE VIDEO                                                  */
+  /* ============================================================= */
+  let videoTerbuka = false;
+
+  function toggleVideo() {
+    const wrap = document.getElementById('videoWrap');
+    const badge = document.getElementById('videoBadge');
+    const video = document.getElementById('videoPlayer');
+
+    videoTerbuka = !videoTerbuka;
+
+    if (videoTerbuka) {
+      wrap.classList.add('open');
+      badge.textContent = 'CLOSE';
+      setTimeout(() => {
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 250);
+    } else {
+      wrap.classList.remove('open');
+      badge.textContent = 'PLAY';
+      if (video) {
+        video.pause();
+      }
+    }
+  }
+
+  /* ============================================================= */
+  /* TOGGLE NOTE - ANIMASI LIPAT                                   */
+  /* ============================================================= */
+  function toggleNote() {
+    const box = document.getElementById('noteBox');
+    box.classList.toggle('open');
+  }
+
+  /* ============================================================= */
+  /* TOGGLE TEKS (BUKA / TUTUP)                                    */
+  /* ============================================================= */
+  function toggleTeks(idBtn, idWrap) {
+    const btn = document.getElementById(idBtn);
+    const wrap = document.getElementById(idWrap);
+    const badge = btn.querySelector('.badge-toggle');
+    const title = btn.querySelector('.title');
+    const sub = btn.querySelector('.sub');
+
+    const isOpen = wrap.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+
+    if (isOpen) {
+      badge.textContent = 'TUTUP';
+      title.textContent = 'Tutup Teks Pesan';
+      sub.textContent = 'Klik untuk tutup kembali';
+      if (idWrap === 'wrapSms') {
+        document.getElementById('charCountSms').textContent = document.getElementById('hasilSms').value.length + ' karakter';
+      } else if (idWrap === 'wrapPw') {
+        document.getElementById('charCountPw').textContent = document.getElementById('hasilPw').value.length + ' karakter';
+      } else if (idWrap === 'wrapBanyak') {
+        document.getElementById('charCountBanyak').textContent = document.getElementById('hasilBanyak').value.length + ' karakter';
+      }
+      setTimeout(() => {
+        wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 300);
+    } else {
+      badge.textContent = 'BUKA';
+      title.textContent = 'Lihat Teks Pesan';
+      sub.textContent = 'Klik untuk buka / tutup';
+    }
+  }
+
+  /* ============================================================= */
+  /* SISTEM PIN LOCK - PIN 990099                                  */
+  /* ============================================================= */
+  const PIN_BENAR = '990099';
+  const PANJANG_PIN = 6;
+  let pinInput = '';
+
+  const pinDots = document.querySelectorAll('.pin-dot');
+  const lockBox = document.getElementById('lockBox');
+  const lockError = document.getElementById('lockError');
+
+  function updateDots() {
+    pinDots.forEach((dot, i) => {
+      dot.classList.toggle('filled', i < pinInput.length);
+    });
+  }
+
+  function pressKey(angka) {
+    if (pinInput.length >= PANJANG_PIN) return;
+    pinInput += angka;
+    updateDots();
+
+    if (pinInput.length === PANJANG_PIN) {
+      setTimeout(cekPin, 180);
+    }
+  }
+
+  function hapusPin() {
+    pinInput = pinInput.slice(0, -1);
+    updateDots();
+    lockError.classList.remove('show');
+  }
+
+  function cekPin() {
+    if (pinInput === PIN_BENAR) {
+      lockError.classList.remove('show');
+      const lockScreen = document.getElementById('lockScreen');
+      lockScreen.classList.add('hidden');
+
+      setTimeout(() => {
+        document.getElementById('mainApp').style.display = 'block';
+        generateSms();
+        generatePw();
+        generateBanyak();
+      }, 350);
+    } else {
+      lockBox.classList.add('shake');
+      lockError.classList.add('show');
+      setTimeout(() => {
+        lockBox.classList.remove('shake');
+        pinInput = '';
+        updateDots();
+      }, 500);
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const lockScreen = document.getElementById('lockScreen');
+    if (lockScreen.classList.contains('hidden')) return;
+
+    if (e.key >= '0' && e.key <= '9') {
+      pressKey(e.key);
+    } else if (e.key === 'Backspace') {
+      hapusPin();
+    }
+  });
+
+  /* ============================================================= */
+  /* NAVIGASI HALAMAN                                              */
+  /* ============================================================= */
+  function bukaHalaman(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ============================================================= */
+  /* BERSIHKAN INPUT NOMOR - hanya angka                           */
+  /* ============================================================= */
+  function bersihkanNomor(input) {
+    const nilaiLama = input.value;
+    const bersih = nilaiLama.replace(/[^0-9]/g, '');
+    if (bersih !== nilaiLama) {
+      const start = input.selectionStart || 0;
+      const jumlahDihapus = nilaiLama.length - bersih.length;
+      input.value = bersih;
+      const posisiBaru = Math.max(0, start - jumlahDihapus);
+      try {
+        input.setSelectionRange(posisiBaru, posisiBaru);
+      } catch (e) {}
+    }
+    return bersih;
+  }
+
+  /* Helper pasang auto-bersih nomor (paste-safe) */
+  function pasangAutoBersihNomor(input, onBersih) {
+    if (!input) return;
+
+    // Ketik manual: bersihkan & regenerate
+    input.addEventListener('input', function (e) {
+      if (e.inputType === 'insertFromPaste') return; // paste ditangani sendiri
+      bersihkanNomor(this);
+      if (onBersih) onBersih();
+    });
+
+    // Paste: izinkan masuk, lalu bersihkan setelahnya
+    input.addEventListener('paste', function () {
+      setTimeout(() => {
+        bersihkanNomor(this);
+        if (onBersih) onBersih();
+      }, 0);
+    });
+
+    // Blur: bersihkan
+    input.addEventListener('blur', function () {
+      bersihkanNomor(this);
+      if (onBersih) onBersih();
+    });
+
+    // Blokir HANYA ketikan manual non-digit (bukan paste)
+    input.addEventListener('beforeinput', function (e) {
+      if (e.inputType === 'insertText' && e.data && /[^0-9]/.test(e.data)) {
+        e.preventDefault();
+      }
+    });
+  }
+
+  /* ============================================================= */
+  /* HALAMAN RESET SMS JAM                                         */
+  /* ============================================================= */
+  let metSmsAktif = 1;
+
+  const templateSmsMet1 = (nomor, jam) =>
+`Halo dukungan WhatsApp, 
+Saya merupakan pengguna WhatsApp dan pemilik akun WhatsApp sah pada nomor +${nomor}, Saya menghubungi tim dukungan karena ingin meminta bantuan terkait dengan masalah verifikasi akun WhatsApp saya, saat saya ingin mengirimkan kode melalui SMS ada bacaan tunggu selama ${jam}jam, tetapi saat saya sudah menunggu hingga waktu yang telah ditentukan hasilnya tetap saja sama dan tidak ada perubahan sedikitpun dan dari waktu yang telah saya tunggu lama sekali telah terbuang sia-sia, saya sangat berharap tim dukungan dapat membantu akun WhatsApp tersebut untuk segera, karena saya memiliki rapat penting terkait dengan pembangunan kota yang ada di luar negeri, saya harap tim dukungan WhatsApp dapat membantu untuk mereset SMS saya segera! Agar saya dapat menggunakan akun WhatsApp saya kembali, saya ucapkan Terimakasih.`;
+
+  const templateSmsMet2 = (nomor, jam) =>
+`Halo dukungan WhatsApp, 
+Saya membutuhkan bantuan anda terkait dengan verifikasi akun WhatsApp saya pada nomor +${nomor} yang saat ingin mengirimkan kode melalui SMS harus menunggu hingga ${jam} jam lamanya, dan juga saat saya ingin mengirimkan kode melalui telepon suara dan telepon tak terjawab hasilnya tetap sama dan tidak ada perubahan sedikitpun, Saya sangat membutuhkan akun tersebut sekarang karena saya ingin mengabarkan keluarga saya karena tidak dapat mengikuti acara pernikahan, saya berharap tim dukungan dapat membantu.`;
+
+  const elNomorSms = document.getElementById('nomorSms');
+  const elJamSms = document.getElementById('jamSms');
+  const elHasilSms = document.getElementById('hasilSms');
+  const elCharCountSms = document.getElementById('charCountSms');
+
+  function generateSms() {
+    const nomor = elNomorSms.value.trim() || 'XXXXXXXXXX';
+    const jam = elJamSms.value.trim() || 'X';
+    const teks = metSmsAktif === 1 ? templateSmsMet1(nomor, jam) : templateSmsMet2(nomor, jam);
+    elHasilSms.value = teks;
+    elCharCountSms.textContent = teks.length + ' karakter';
+  }
+
+  function pilihMetSms(met) {
+    metSmsAktif = met;
+    document.querySelectorAll('#page-sms .met-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.met == met);
+    });
+    generateSms();
+  }
+
+  pasangAutoBersihNomor(elNomorSms, generateSms);
+  elJamSms.addEventListener('input', generateSms);
+
+  /* ============================================================= */
+  /* HALAMAN RESET PIN                                             */
+  /* ============================================================= */
+  let metPwAktif = 1;
+
+  const templatePwMet1 = (nomor) =>
+`Hi WhatsApp team,
+Please help for my number +${nomor}
+I forgot my two step pin and my recovery email is no longer active, i cant access it anymore. Now it says i have to wait 6 days to reset.
+I really need my account now to contact my family for a wedding event, i have no other way to reach them.
+This number is still with me, i can receive SMS or call to prove its mine.
+Please help reset my pin.
+Thank you so much.`;
+
+  const templatePwMet2 = (nomor) =>
+`Dear WhatsApp team,
+I am writing about +${nomor}
+I can't access my account because I forgot the two step verification pin. I tried to reset via email but that email is old and I lost access to it.
+Now I have to wait 6 days and I really can't wait because I need to inform my family about a wedding, they only use WhatsApp to communicate.
+Please can you help me remove the pin? I still have the SIM card and can receive code.
+Thank you for understanding.`;
+
+  const elNomorPw = document.getElementById('nomorPw');
+  const elHasilPw = document.getElementById('hasilPw');
+  const elCharCountPw = document.getElementById('charCountPw');
+
+  function generatePw() {
+    const nomor = elNomorPw.value.trim() || 'XXXXXXXXXX';
+    const teks = metPwAktif === 1 ? templatePwMet1(nomor) : templatePwMet2(nomor);
+    elHasilPw.value = teks;
+    elCharCountPw.textContent = teks.length + ' karakter';
+  }
+
+  function pilihMetPw(met) {
+    metPwAktif = met;
+    document.querySelectorAll('#page-pw .met-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.met == met);
+    });
+    generatePw();
+  }
+
+  pasangAutoBersihNomor(elNomorPw, generatePw);
+
+  /* ============================================================= */
+  /* HALAMAN RESET BANYAK MENCOBA                                  */
+  /* ============================================================= */
+  const templateBanyak = (nomor) =>
+`Yth, kepada tim dukungan WhatsApp 
+Perkenalkan saya adalah pemilik akun WhatsApp pada nomor +${nomor}, melalui pesan ini saya ingin meminta bantuan kepada tim dukungan WhatsApp terkait dengan masalah verifikasi akun WhatsApp saya yang telah banyak menebak kode, saya sangat terkejut karena saya sebelumnya baru saja mengirimkan kode melalui opsi perangkat, tetapi ada bacaan "Terlalu banyak mencoba memasukkan kode" saya sangat terkejut dengan hal ini karena saya baru saja mengirimkan kode satu kali,
+Saat ini juga Saya sangat membutuhkan akun WhatsApp tersebut untuk kepentingan bekerja saya, saya berharap tim dukungan WhatsApp dapat membantu saya dalam hal ini, saya ucapkan terimakasih.`;
+
+  const elNomorBanyak = document.getElementById('nomorBanyak');
+  const elHasilBanyak = document.getElementById('hasilBanyak');
+  const elCharCountBanyak = document.getElementById('charCountBanyak');
+
+  function generateBanyak() {
+    const nomor = elNomorBanyak.value.trim() || 'XXXXXXXXXX';
+    const teks = templateBanyak(nomor);
+    elHasilBanyak.value = teks;
+    elCharCountBanyak.textContent = teks.length + ' karakter';
+  }
+
+  pasangAutoBersihNomor(elNomorBanyak, generateBanyak);
+
+  /* ============================================================= */
+  /* FUNGSI SALIN                                                  */
+  /* ============================================================= */
+  function salinTeks(idTextarea, idBtn, idText) {
+    const textarea = document.getElementById(idTextarea);
+    const btn = document.getElementById(idBtn);
+    const span = document.getElementById(idText);
+    const teks = textarea.value;
+    if (!teks) return;
+
+    const doCopy = () => {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(teks);
+      } else {
+        return new Promise((resolve, reject) => {
+          textarea.select();
+          textarea.setSelectionRange(0, 99999);
+          try {
+            document.execCommand('copy');
+            resolve();
+          } catch (e) {
+            reject(e);
+          }
+          window.getSelection().removeAllRanges();
+        });
+      }
+    };
+
+    doCopy().then(() => {
+      btn.classList.add('copied');
+      span.textContent = 'Tersalin!';
+      showToast('✓ Teks berhasil disalin!');
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        span.textContent = 'Salin Teks';
+      }, 2000);
+    }).catch(() => {
+      showToast('Gagal menyalin, salin manual ya');
+    });
+  }
+
+  /* ============================================================= */
+  /* TOAST                                                         */
+  /* ============================================================= */
+  let toastTimer;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+</script>
+
+</body>
+</html>
